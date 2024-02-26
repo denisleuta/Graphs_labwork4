@@ -142,7 +142,7 @@ std::string to_string(T value) {
 }
 
 int main() {
-    const int numVertices = 500;
+    const int numVertices = 100;
     const int width = 1920;
     const int height = 1080;
 
