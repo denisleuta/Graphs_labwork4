@@ -27,7 +27,7 @@ public:
 
         writeHeader(file);
 
-        writeImageData(file,true);
+        writeImageData(file);
 
         file.close();
     }
@@ -56,7 +56,7 @@ private:
         writeInt(file, 0);
     }
 
-    void writeImageData(std::ofstream& file, bool drawRed) {
+    void writeImageData(std::ofstream& file) {
         std::vector<std::vector<bool>> bitmap(m_height, std::vector<bool>(m_width, false));
 
         // Рисуем рёбра
@@ -74,55 +74,29 @@ private:
             int labelY = m_vertices[i].y + 7; // Сдвигаем на 7 пикселей вниз
 
             // Рисуем номер вершины
-            drawText(bitmap, m_vertices[i].label, labelX, labelY, drawRed);
+            drawText(bitmap, m_vertices[i].label, labelX, labelY);
         }
 
         // Записываем данные изображения в файл
         for (int y = m_height - 1; y >= 0; --y) {
             for (int x = 0; x < m_width; ++x) {
-                // Выводим цвет в зависимости от битмапа
-                if (bitmap[y][x]) {
-                    // Если битмап содержит вершину или номер вершины
-                    if (drawRed) {
-                        // Если требуется красный цвет, устанавливаем красный и синий каналы
-                        file.put(static_cast<char>(255))  // Красный канал
-                            .put(0)                       // Зеленый канал (прозрачный)
-                            .put(static_cast<char>(255)); // Синий канал
-                    }
-                    else {
-                        // Если требуется черный цвет, устанавливаем каналы в нуль
-                        file.put(0)  // Красный канал (прозрачный)
-                            .put(0)   // Зеленый канал (прозрачный)
-                            .put(0);  // Синий канал (прозрачный)
-                    }
-                }
-                else {
-                    // Выводим прозрачный цвет для фона
-                    file.put(0)  // Красный канал (прозрачный)
-                        .put(0)   // Зеленый канал (прозрачный)
-                        .put(0);  // Синий канал (прозрачный)
-                }
+                file.put(bitmap[y][x] ? static_cast<char>(0) : static_cast<char>(255))
+                    .put(bitmap[y][x] ? static_cast<char>(0) : static_cast<char>(255))
+                    .put(bitmap[y][x] ? static_cast<char>(0) : static_cast<char>(255));
             }
         }
     }
 
-    /*void drawText(std::vector<std::vector<bool>>& bitmap, const std::string& text, int x, int y, bool red) {
+    void drawText(std::vector<std::vector<bool>>& bitmap, const std::string& text, int x, int y) {
         // Отобразите текст на изображении в позиции (x, y)
         for (size_t i = 0; i < text.length(); ++i) {
-            drawCharacter(bitmap, text[i], x + i * 6, y, red); // каждый символ имеет ширину 6 пикселей
+            drawCharacter(bitmap, text[i], x + i * 6, y); // каждый символ имеет ширину 6 пикселей
         }
     }
-    */
-    void drawText(std::vector<std::vector<bool>>& bitmap, const std::string& text, int x, int y, bool drawRed) {
-        // Отобразите текст на изображении в позиции (x, y)
-        for (size_t i = 0; i < text.length(); ++i) {
-            drawCharacter(bitmap, text[i], x + i * 6, y, drawRed); // каждый символ имеет ширину 6 пикселей
-        }
-    }
-    void drawCharacter(std::vector<std::vector<bool>>& bitmap, char character, int x, int y, bool drawRed) {
+    void drawCharacter(std::vector<std::vector<bool>>& bitmap, char character, int x, int y) {
         // Шаблоны символов (для примера)
         const std::vector<std::vector<std::vector<bool>>> charTemplates = {
-            
+
             // Шаблон для цифры 0
             {
                 {0, 1, 1, 1, 0},
@@ -206,10 +180,7 @@ private:
                     if (charTemplates[index][i][j]) {
                         // Проверяем, что координаты пикселя находятся в пределах изображения
                         if (x + j >= 0 && x + j < bitmap[0].size() && y + i >= 0 && y + i < bitmap.size()) {
-                            // Если drawRed равен true, устанавливаем цвет
-                            if (drawRed) {
-                                bitmap[y + i][x + j] = true;
-                            }
+                            bitmap[y + i][x + j] = true;
                         }
                     }
                 }
