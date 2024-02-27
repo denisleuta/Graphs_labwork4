@@ -59,25 +59,22 @@ private:
     void writeImageData(std::ofstream& file) {
         std::vector<std::vector<bool>> bitmap(m_height, std::vector<bool>(m_width, false));
 
-        // Рисуем рёбра
         for (const auto& edge : m_edges) {
             drawLine(bitmap, m_vertices[edge.vertex1].x, m_vertices[edge.vertex1].y,
                 m_vertices[edge.vertex2].x, m_vertices[edge.vertex2].y);
         }
 
-        // Рисуем вершины и номера рядом с ними
         for (size_t i = 0; i < m_vertices.size(); ++i) {
             drawCircle(bitmap, m_vertices[i].x, m_vertices[i].y);
 
-            // Определяем позицию для номера вершины
-            int labelX = m_vertices[i].x + 7; // Сдвигаем на 7 пикселей вправо
-            int labelY = m_vertices[i].y + 7; // Сдвигаем на 7 пикселей вниз
+            int labelX = m_vertices[i].x + 7; 
+            int labelY = m_vertices[i].y + 7; 
 
-            // Рисуем номер вершины
+            
             drawText(bitmap, m_vertices[i].label, labelX, labelY);
         }
 
-        // Записываем данные изображения в файл
+        
         for (int y = m_height - 1; y >= 0; --y) {
             for (int x = 0; x < m_width; ++x) {
                 file.put(bitmap[y][x] ? static_cast<char>(0) : static_cast<char>(255))
@@ -88,16 +85,32 @@ private:
     }
 
     void drawText(std::vector<std::vector<bool>>& bitmap, const std::string& text, int x, int y) {
-        // Отобразите текст на изображении в позиции (x, y)
+        
+        int labelWidth = text.length() * 10; // Ширина таблички
+        int labelHeight = 20; 
+        int labelX = x - labelWidth / 10; // Начальная координата X таблички
+        int labelY = y - labelHeight / 10; 
+
+       
+        if (labelX < 0 || labelX + labelWidth >= m_width || labelY < 0 || labelY + labelHeight >= m_height) {
+            return; 
+        }        
+        for (int i = 0; i < labelWidth; ++i) {
+            bitmap[labelY][labelX + i] = true; 
+            bitmap[labelY + labelHeight][labelX + i] = true; 
+        }
+
+        for (int i = 0; i < labelHeight; ++i) {
+            bitmap[labelY + i][labelX] = true;
+            bitmap[labelY + i][labelX + labelWidth] = true; 
+        }
+
         for (size_t i = 0; i < text.length(); ++i) {
-            drawCharacter(bitmap, text[i], x + i * 6, y); // каждый символ имеет ширину 6 пикселей
+            drawCharacter(bitmap, text[i], labelX + i * 6, labelY + labelHeight / 2 - 3);
         }
     }
     void drawCharacter(std::vector<std::vector<bool>>& bitmap, char character, int x, int y) {
-        // Шаблоны символов (для примера)
         const std::vector<std::vector<std::vector<bool>>> charTemplates = {
-
-            // Шаблон для цифры 0
             {
                 {0, 1, 1, 1, 0},
                 {1, 0, 0, 0, 1},
@@ -105,7 +118,6 @@ private:
                 {1, 0, 0, 0, 1},
                 {0, 1, 1, 1, 0}
             },
-            // Шаблон для цифры 1
             {
                 {0, 0, 1, 0, 0},
                 {0, 1, 1, 0, 0},
@@ -171,14 +183,11 @@ private:
             },
         };
 
-        // Проверяем, что символ находится в пределах допустимых значений
         if (character >= '0' && character <= '9') {
-            int index = character - '0'; // Получаем индекс шаблона символа в массиве
+            int index = character - '0'; 
             for (size_t i = 0; i < charTemplates[index].size(); ++i) {
                 for (size_t j = 0; j < charTemplates[index][i].size(); ++j) {
-                    // Рисуем символ, если пиксель в шаблоне равен true
                     if (charTemplates[index][i][j]) {
-                        // Проверяем, что координаты пикселя находятся в пределах изображения
                         if (x + j >= 0 && x + j < bitmap[0].size() && y + i >= 0 && y + i < bitmap.size()) {
                             bitmap[y + i][x + j] = true;
                         }
