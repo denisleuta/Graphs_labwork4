@@ -270,6 +270,23 @@ void readInputFromFile(const std::string& filename, int& numVertices, int& width
     }
 }
 
+void readEdgesFromFile(const std::string& filename, std::vector<Edge>& edges) {
+    std::ifstream file(filename);
+    if (file.is_open()) {
+        int vertex1, vertex2;
+        while (file >> vertex1 >> vertex2) {
+            Edge edge;
+            edge.vertex1 = vertex1;
+            edge.vertex2 = vertex2;
+            edges.push_back(edge);
+        }
+        file.close();
+    }
+    else {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+    }
+}
+
 int main() {
     int numVertices, width, height;
     readInputFromFile("graph_data.txt", numVertices, width, height);
@@ -282,16 +299,7 @@ int main() {
         vertices.push_back({ rand() % width, rand() % height, to_string(i) });
     }
 
-    for (int i = 0; i < numVertices; ++i) {
-        for (int j = i + 1; j < numVertices; ++j) {
-            if (rand() % 5 == 0) {
-                Edge edge;
-                edge.vertex1 = i;
-                edge.vertex2 = j;
-                edges.push_back(edge);
-            }
-        }
-    }
+    readEdgesFromFile("edges_data.txt", edges);
 
     BMPGenerator bmpGenerator(width, height, vertices, edges);
     bmpGenerator.generate("graph.bmp");
