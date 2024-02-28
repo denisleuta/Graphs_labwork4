@@ -289,7 +289,7 @@ void readEdgesFromFile(const std::string& filename, std::vector<Edge>& edges) {
 
 int main() {
     int numVertices, width, height;
-    readInputFromFile("graph_data.txt", numVertices, width, height);
+    readInputFromFile("graphs_data.txt", numVertices, width, height);
 
     std::vector<Vertex> vertices;
     std::vector<Edge> edges;
@@ -299,7 +299,7 @@ int main() {
         vertices.push_back({ rand() % width, rand() % height, to_string(i) });
     }
 
-    readEdgesFromFile("edges_data.txt", edges);
+    readEdgesFromFile("edge_data.txt", edges);
 
     BMPGenerator bmpGenerator(width, height, vertices, edges);
     bmpGenerator.generate("graph.bmp");
