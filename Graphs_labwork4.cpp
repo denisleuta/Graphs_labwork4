@@ -324,7 +324,7 @@ int main() {
     readEdgesFromFile("edge_data.txt", edges); 
 
     BMPGenerator bmpGenerator(width, height, vertices, edges); // Создание объекта генератора изображения
-    bmpGenerator.generate("graph.bmp"); // Генерация изображения и запись в файл
+    bmpGenerator.generate("graph.bmp"); // Генерация изображения и запись в фай
 
     return 0; 
 }
