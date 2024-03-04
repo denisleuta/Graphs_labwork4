@@ -1,5 +1,0 @@
-﻿  Graphs_labwork4.cpp
-C:\Users\denis\OneDrive\Рабочий стол\C++\Graphs_labwork4\Graphs_labwork4.cpp(95,24): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\denis\OneDrive\Рабочий стол\C++\Graphs_labwork4\Graphs_labwork4.cpp(115,51): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\denis\OneDrive\Рабочий стол\C++\Graphs_labwork4\Graphs_labwork4.cpp(317,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  Graphs_labwork4.vcxproj -> C:\Users\denis\OneDrive\Рабочий стол\C++\Graphs_labwork4\x64\Debug\Graphs_labwork4.exe
